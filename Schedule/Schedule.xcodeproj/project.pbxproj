@@ -13,6 +13,7 @@
 		E2347F661FB684A0007D81B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2347F651FB684A0007D81B0 /* Assets.xcassets */; };
 		E2347F691FB684A0007D81B0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2347F671FB684A0007D81B0 /* LaunchScreen.storyboard */; };
 		E2347F711FB68559007D81B0 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2347F701FB68559007D81B0 /* ScheduleCell.swift */; };
+		E2E117111FC0E47400D7C86E /* ClassDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E117101FC0E47400D7C86E /* ClassDetailsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		E2347F681FB684A0007D81B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2347F6A1FB684A0007D81B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2347F701FB68559007D81B0 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
+		E2E117101FC0E47400D7C86E /* ClassDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				E2347F671FB684A0007D81B0 /* LaunchScreen.storyboard */,
 				E2347F6A1FB684A0007D81B0 /* Info.plist */,
 				E2347F701FB68559007D81B0 /* ScheduleCell.swift */,
+				E2E117101FC0E47400D7C86E /* ClassDetailsView.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2E117111FC0E47400D7C86E /* ClassDetailsView.swift in Sources */,
 				E2347F611FB684A0007D81B0 /* TimetableViewController.swift in Sources */,
 				E2347F711FB68559007D81B0 /* ScheduleCell.swift in Sources */,
 				E2347F5F1FB684A0007D81B0 /* AppDelegate.swift in Sources */,

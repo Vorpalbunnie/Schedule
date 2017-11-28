@@ -1,5 +1,5 @@
 import UIKit
-struct Course {
+struct Course: Hashable { // Hashing is necessary for sets
     var name: String
     var startTime: Int // 0 <-> 8:00, 1 <-> 8:30...
     var duration: Int // 1 unit <-> 30 min
@@ -22,26 +22,27 @@ struct Course {
         self.building = building
         self.department = department
     }
+    
+    var hashValue: Int {return name.hashValue}
+    static func == (lhs: Course, rhs: Course) -> Bool {return lhs.name == rhs.name}
 }
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     override func viewDidLoad() {
-        var k = 0
-        for course in courses {
-            for day in course.weekday {
-                let block = 6*course.startTime + day + 7
-                cellDict.updateValue((course, colors[k], true), forKey: block) // first block on each day displays name
-                for i in 1...course.duration-1 {cellDict.updateValue((course, colors[k], false), forKey: block+6*i)} // rest do not
-            }
-            k += 1
-        }
+        updateDict()
         super.viewDidLoad()
+        scheduleView.dataSource = self
+        scheduleView.delegate = self
+        classDetailsView.backgroundColor = UIColor.lightGray
         classDetailsView.isHidden = true
     }
     override func didReceiveMemoryWarning() {super.didReceiveMemoryWarning()}
     
-    let courses = [Course(name: "Intermediate Stats", startTime: 2, duration: 2, weekday: [0, 2, 4], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math"), Course(name: "Writing 1", startTime: 5, duration: 3, weekday: [1, 3], instructor: "Wrighton", credits: 4, seats: 90, final: false, building: "Eads", department: "English"), Course(name: "CSE 131", startTime: 9, duration: 2, weekday: [0, 2, 4], instructor: "Cytron", credits: 1, seats: 300, final: true, building: "Urbauer", department: "Computer Science")]
-    let colors = [UIColor.blue, UIColor.yellow, UIColor.green, UIColor.purple, UIColor.cyan, UIColor.white, UIColor.brown]
+    var courses: Set<Course> = [Course(name: "Intermediate Stats", startTime: 2, duration: 2, weekday: [0, 2, 4], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math"), Course(name: "Writing 1", startTime: 5, duration: 3, weekday: [1, 3], instructor: "Wrighton", credits: 4, seats: 90, final: false, building: "Eads", department: "English"), Course(name: "CSE 131", startTime: 9, duration: 2, weekday: [0, 2, 4], instructor: "Cytron", credits: 1, seats: 300, final: true, building: "Urbauer", department: "Computer Science")]
+    let colors = [UIColor.blue, UIColor.yellow, UIColor.green, UIColor.cyan, UIColor.orange, UIColor.magenta, UIColor.white]
+    var cellDict = [Int:(course: Course, color: UIColor, displayName: Bool)]() // 3 pieces of info for each cell
+    var currentCourse = Course(name: "Intermediate Stats", startTime: 2, duration: 2, weekday: [0, 2, 4], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math")
+    
     @IBOutlet weak var scheduleView: UICollectionView!
     @IBOutlet weak var classDetailsView: ClassDetailsView!
     @IBOutlet weak var name: UILabel!
@@ -51,11 +52,29 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var final: UILabel!
     @IBOutlet weak var building: UILabel!
     @IBOutlet weak var department: UILabel!
-    
     @IBAction func close(_ sender: UIButton) {classDetailsView.isHidden = true}
-    var cellDict = [Int:(course: Course, color: UIColor, displayName: Bool)]()
+    @IBAction func dropCourse(_ sender: UIButton) {
+        courses.remove(currentCourse)
+        cellDict = [:]
+        updateDict()
+        self.scheduleView.reloadData()
+        classDetailsView.isHidden = true
+    }
     
-    func displayTime(row : Int) -> String {
+    func updateDict() { // update the dictionary with the course set
+        var k = 0
+        for course in courses {
+            for day in course.weekday {
+                let block = 6*course.startTime + day + 7
+                cellDict.updateValue((course, colors[k], true), forKey: block) // first block on each day displays name
+                for i in 1...course.duration-1 {cellDict.updateValue((course, colors[k], false), forKey: block+6*i)} // rest do not
+            }
+            k += 1
+            if (k == 7) {k = 0}
+        }
+    }
+    
+    func displayTime(row : Int) -> String { // converts a row to a time
         var hours = (15 + row) / 2
         if (hours > 12) {hours -= 12}
         if (row % 2 == 1) {return String(hours) + ":00"} // odd rows are on the hour
@@ -94,14 +113,22 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (cellDict[indexPath.row] != nil) {
             classDetailsView.isHidden = false
-            name.text = "Name: " + cellDict[indexPath.row]!.course.name
-            instructor.text = "Instructor: " + cellDict[indexPath.row]!.course.instructor
-            credits.text = "Credits: " + String(cellDict[indexPath.row]!.course.credits)
-            seats.text = "Seats: " + String(cellDict[indexPath.row]!.course.seats)
-            if (cellDict[indexPath.row]!.course.final) {final.text = "Final: Yes"}
+            currentCourse = cellDict[indexPath.row]!.course
+            name.text = "Name: " + currentCourse.name
+            instructor.text = "Instructor: " + currentCourse.instructor
+            credits.text = "Credits: " + String(currentCourse.credits)
+            seats.text = "Seats: " + String(currentCourse.seats)
+            if (currentCourse.final) {final.text = "Final: Yes"}
                 else {final.text = "Final: No"}
-            building.text = "Building: " + cellDict[indexPath.row]!.course.building
-            department.text = "Department: " + cellDict[indexPath.row]!.course.department
+            building.text = "Building: " + currentCourse.building
+            department.text = "Department: " + currentCourse.department
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize { // 6 columns per row
+        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let marginsAndInsets = flowLayout.sectionInset.left + flowLayout.sectionInset.right + flowLayout.minimumInteritemSpacing * CGFloat(5)
+        let itemWidth = ((collectionView.bounds.size.width - marginsAndInsets) / CGFloat(6)).rounded(.down)
+        return CGSize(width: itemWidth, height: 36)
     }
 }
