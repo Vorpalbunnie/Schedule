@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VBw-aS-MSY">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="g5j-lH-bTK">
                                     <size key="itemSize" width="61" height="36"/>
@@ -132,14 +132,10 @@
                                     <constraint firstItem="xPz-gr-vOt" firstAttribute="centerX" secondItem="8PI-qQ-Q2L" secondAttribute="centerX" id="yg9-wN-LsE"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BNT-I5-Fpo">
-                                <rect key="frame" x="110" y="630" width="81" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Add Course"/>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="VBw-aS-MSY" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Ann-zx-laa"/>
                             <constraint firstItem="8PI-qQ-Q2L" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="18" id="HYb-sd-huN"/>
                             <constraint firstItem="VBw-aS-MSY" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Vx6-oJ-HJM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8PI-qQ-Q2L" secondAttribute="bottom" constant="20" id="Xds-gY-SHV"/>
@@ -147,7 +143,6 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8PI-qQ-Q2L" secondAttribute="trailing" constant="13" id="dIi-h8-ts1"/>
                             <constraint firstItem="8PI-qQ-Q2L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="juU-5U-dGD"/>
                             <constraint firstItem="VBw-aS-MSY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="x5n-ma-mTt"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="VBw-aS-MSY" secondAttribute="bottom" constant="64" id="xnh-gS-Arq"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

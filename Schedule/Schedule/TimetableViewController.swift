@@ -29,6 +29,14 @@ struct Course: Hashable { // Hashing is necessary for sets
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     override func viewDidLoad() {
+        for i in 1...3 { // colors repeat every 6 courses with varying alpha
+            colors.append(UIColor(red:0, green:1, blue:0, alpha:1/CGFloat(i)))
+            colors.append(UIColor(red:0, green:0, blue:1, alpha:1/CGFloat(i)))
+            colors.append(UIColor(red:1, green:0, blue:0, alpha:1/CGFloat(i)))
+            colors.append(UIColor(red:1, green:1, blue:0, alpha:1/CGFloat(i)))
+            colors.append(UIColor(red:1, green:0, blue:1, alpha:1/CGFloat(i)))
+            colors.append(UIColor(red:0, green:1, blue:1, alpha:1/CGFloat(i)))
+        }
         updateDict()
         super.viewDidLoad()
         scheduleView.dataSource = self
@@ -38,10 +46,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     override func didReceiveMemoryWarning() {super.didReceiveMemoryWarning()}
     
-    var courses: Set<Course> = [Course(name: "Intermediate Stats", startTime: 2, duration: 2, weekday: [0, 2, 4], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math"), Course(name: "Writing 1", startTime: 5, duration: 3, weekday: [1, 3], instructor: "Wrighton", credits: 4, seats: 90, final: false, building: "Eads", department: "English"), Course(name: "CSE 131", startTime: 9, duration: 2, weekday: [0, 2, 4], instructor: "Cytron", credits: 1, seats: 300, final: true, building: "Urbauer", department: "Computer Science")]
-    let colors = [UIColor.blue, UIColor.yellow, UIColor.green, UIColor.cyan, UIColor.orange, UIColor.magenta, UIColor.white]
+    var courses: Set<Course> = [Course(name: "Hello Stats", startTime: 2, duration: 3, weekday: [1, 3], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math"), Course(name: "new 1", startTime: 4, duration: 3, weekday: [1, 3], instructor: "Wrighton", credits: 4, seats: 90, final: false, building: "Eads", department: "English")]
+    var colors = [UIColor]() // supports 18 courses
     var cellDict = [Int:(course: Course, color: UIColor, displayName: Bool)]() // 3 pieces of info for each cell
-    var currentCourse = Course(name: "Intermediate Stats", startTime: 2, duration: 2, weekday: [0, 2, 4], instructor: "Spitznagel", credits: 3, seats: 40, final: true, building: "Cupples", department: "Math")
+    var currentCourse = Course(name: "", startTime: 0, duration: 0, weekday: [], instructor: "", credits: 0, seats: 0, final: true, building: "", department: "") // temporary initialization
     
     @IBOutlet weak var scheduleView: UICollectionView!
     @IBOutlet weak var classDetailsView: ClassDetailsView!
@@ -66,11 +74,21 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         for course in courses {
             for day in course.weekday {
                 let block = 6*course.startTime + day + 7
-                cellDict.updateValue((course, colors[k], true), forKey: block) // first block on each day displays name
-                for i in 1...course.duration-1 {cellDict.updateValue((course, colors[k], false), forKey: block+6*i)} // rest do not
+                let conflict = Course(name: "Conflict!", startTime: course.startTime, duration: course.duration, weekday: course.weekday, instructor: "", credits: 0, seats: 0, final: true, building: "", department: "")
+                if (cellDict[block] != nil) {
+                    cellDict.updateValue((conflict, UIColor.black, true), forKey: block) // if there is something already here, color black for conflict
+                } else {
+                    cellDict.updateValue((course, colors[k], true), forKey: block) // first block on each day displays name
+                }
+                for i in 1...course.duration-1 {
+                    if (cellDict[block+6*i] != nil) {
+                        cellDict.updateValue((conflict, UIColor.black, false), forKey: block+6*i) // if there is something already here, color black for conflict
+                    } else {
+                    cellDict.updateValue((course, colors[k], false), forKey: block+6*i)} // rest do not
+                }
             }
-            k += 1
-            if (k == 7) {k = 0}
+            k += 1 // go to next color
+            if (k == 18) {k = 0}
         }
     }
     
@@ -104,7 +122,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         
         if (indexPath.row == 0) { // clear upper left cell
-            cell.classInfo.text = ""
+            cell.classInfo.text = "WUSTL"
             cell.backgroundColor = UIColor.white
         }
         return cell
